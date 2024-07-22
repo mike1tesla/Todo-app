@@ -19,6 +19,7 @@ class TaskCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         homeCtrl.changeTask(task); //Đặt Task hiện tại thành biến task đc tạo trong detailPage truy cập vào biến task hiện tại
+        homeCtrl.changeTodos(task.todos ?? []); //phân loại: done và doing todos trong task nếu k có todos nào để list rỗng
         Get.to(() => DetailPage());
       },
       child: Container(

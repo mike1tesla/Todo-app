@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:todo/app/data/models/task.dart';
 import 'package:todo/app/data/services/storage/repository.dart';
@@ -18,6 +19,9 @@ class HomeController extends GetxController{
   final tasks = <Task>[].obs;
   //quan sát 1 task có được chọn hay không trong add_dialog chọn select Task
   final task = Rx<Task?>(null);
+  //list các todos đang làm và list các todos đã hoàn thành xong
+  final doingTodos = <dynamic>[].obs;
+  final doneTodos = <dynamic>[].obs;
 
   // tạo luồng LocalStorage->assignAll->readTasks->gán List tasks->ever obs change-> write Tasks
   @override
@@ -43,9 +47,23 @@ class HomeController extends GetxController{
   void changeDeleting(bool value){
     deleting.value = value;
   }
-  // chọn 1 trong List task đang có trong bộ nhớ
+  // chọn 1 trong List task đang có trong bộ nhớ lưu vào task.value
   void changeTask(Task? select){
     task.value = select;
+  }
+  // thực hiện add các todos trong Task(là select) vào 2 loại done và doing
+  void changeTodos(List<dynamic> select){
+    doingTodos.clear();
+    doneTodos.clear();
+    for(int i = 0; i < select.length; i++){
+      var todo = select[i];
+      var status = todo["done"];
+      if (status == true){
+        doneTodos.add(todo);
+      } else {
+        doingTodos.add(todo);
+      }
+    }
   }
 
   bool addTask(Task task){
@@ -77,5 +95,21 @@ class HomeController extends GetxController{
   // kiểm tra xem có title task trong list todos task hay chưa nếu có trả về true
   bool containeTodo(List todos,String title) {
     return todos.any((element) => element['title'] == title);
+  }
+
+  bool addTodo(String title) {
+    var todo = {'title' : title, 'done' : false};// tao map key title va done
+    //so sánh bất kì element có title giống nhau và status done => trả về false không thêm todo
+    if(doingTodos.any((element) => mapEquals<String, dynamic>(todo, element))){
+     return false;
+    }
+  //so sanh doneTodo voi doneTodosAz%t^NJBHE#WQ87 b, neu da hoan thanh thi khong them vao
+    var doneTodo = {'title' : title, 'done' : true};
+    if(doneTodos.any((element) => mapEquals<String, dynamic>(doneTodo, element))){
+      return false;
+    }
+    // neu khong bi trung lap thi them vao phan doingTodos
+    doingTodos.add(todo);
+    return true;
   }
 }
