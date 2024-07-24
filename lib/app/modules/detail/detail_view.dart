@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:todo/app/core/utils/extensions.dart';
+import 'package:todo/app/modules/detail/widgets/doing_list.dart';
 import 'package:todo/app/modules/home/home_controller.dart';
 
 class DetailPage extends StatelessWidget {
@@ -11,8 +12,7 @@ class DetailPage extends StatelessWidget {
   DetailPage({super.key});
   @override
   Widget build(BuildContext context) {
-    var task = homeCtrl.task
-        .value!; // select biến task lưu trữ trong task.value khi ấn
+    var task = homeCtrl.task.value!; // select biến task lưu trữ trong task.value khi ấn
     var color = HexColor.fromHex(task.color);
     return Scaffold(
       body: Form(
@@ -26,7 +26,9 @@ class DetailPage extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       Get.back();
+                      homeCtrl.updateTodos();
                       homeCtrl.changeTask(null); // khi back lại task.value = null
+                      homeCtrl.editCtrl.clear();
                     },
                     icon: const Icon(Icons.arrow_back),
                   ),
@@ -113,7 +115,8 @@ class DetailPage extends StatelessWidget {
                   return null;
                 },
               ),
-            )
+            ),
+            DoingList(),
           ],
         ),
       ),

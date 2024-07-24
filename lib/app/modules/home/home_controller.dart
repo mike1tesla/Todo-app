@@ -97,13 +97,14 @@ class HomeController extends GetxController{
     return todos.any((element) => element['title'] == title);
   }
 
+  // add todoo into specific task
   bool addTodo(String title) {
     var todo = {'title' : title, 'done' : false};// tao map key title va done
     //so sánh bất kì element có title giống nhau và status done => trả về false không thêm todo
     if(doingTodos.any((element) => mapEquals<String, dynamic>(todo, element))){
      return false;
     }
-  //so sanh doneTodo voi doneTodosAz%t^NJBHE#WQ87 b, neu da hoan thanh thi khong them vao
+    //so sanh doneTodo voi doneTodosAz%t^NJBHE#WQ87 b, neu da hoan thanh thi khong them vao
     var doneTodo = {'title' : title, 'done' : true};
     if(doneTodos.any((element) => mapEquals<String, dynamic>(doneTodo, element))){
       return false;
@@ -112,4 +113,19 @@ class HomeController extends GetxController{
     doingTodos.add(todo);
     return true;
   }
+
+  // update task with new todoo list sẽ cập nhật việc cần làm nhấn khi ấn nút back
+  void updateTodos(){
+    var newTodos = <Map<String, dynamic>>[];
+    newTodos.addAll(
+      [...doingTodos,
+      ...doneTodos]
+    );
+    // tạo newTask vẫn giữ nguyên các thuộc tính title, icon, color chỉ thay đổi thuộc tính todos
+    var newTask = task.value!.copyWith(todos: newTodos);
+    int oldIdx = tasks.indexOf(task.value);
+    tasks[oldIdx] = newTask;
+    tasks.refresh();
+  }
+
 }
