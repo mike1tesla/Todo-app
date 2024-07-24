@@ -57,7 +57,8 @@ class HomeController extends GetxController{
     doneTodos.clear();
     for(int i = 0; i < select.length; i++){
       var todo = select[i];
-      var status = todo["done"];
+      //cau truc bien todo = {'title' : title, 'done' : false}
+      var status = todo["done"]; // mỗi đối tượng có thể truy cập thuộc tính = cách sd ki hiệu []
       if (status == true){
         doneTodos.add(todo);
       } else {
@@ -97,15 +98,16 @@ class HomeController extends GetxController{
     return todos.any((element) => element['title'] == title);
   }
 
-  // add todoo into specific task
+  /// add todo into specific task
+  /// ham nay tao ra 2 bien todo va doneTodo de so sanh trung lap voi list doingTodos va doneTodos
   bool addTodo(String title) {
-    var todo = {'title' : title, 'done' : false};// tao map key title va done
-    //so sánh bất kì element có title giống nhau và status done => trả về false không thêm todo
+    var todo = {'title' : title, 'done' : false};// tao map key title va done Map<String, Boolean>
+    //so sánh voi doingTodos bất kì element có title giống nhau và status done => trả về false không thêm todo
     if(doingTodos.any((element) => mapEquals<String, dynamic>(todo, element))){
      return false;
     }
-    //so sanh doneTodo voi doneTodosAz%t^NJBHE#WQ87 b, neu da hoan thanh thi khong them vao
-    var doneTodo = {'title' : title, 'done' : true};
+    //so sanh doneTodo voi doneTodos neu da hoan thanh thi khong them vao todo
+    var doneTodo = {'title' : title, 'done' : true}; // tao bien Map<String, bool>
     if(doneTodos.any((element) => mapEquals<String, dynamic>(doneTodo, element))){
       return false;
     }
@@ -126,6 +128,17 @@ class HomeController extends GetxController{
     int oldIdx = tasks.indexOf(task.value);
     tasks[oldIdx] = newTask;
     tasks.refresh();
+  }
+
+  void doneTodo(String title) {
+    var doingTodo = {'title': title, 'done': false};
+    int index = doingTodos.indexWhere((element) => mapEquals<String, dynamic>(doingTodo, element));
+    doingTodos.removeAt(index);
+    var doneTodo = {'title': title, 'done': true};
+    doneTodos.add(doneTodo);
+    doingTodos.refresh();
+    doneTodos.refresh();
+
   }
 
 }
