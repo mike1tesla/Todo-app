@@ -31,7 +31,7 @@ class DoingList extends StatelessWidget {
                 SizedBox(
                   width: 20, height: 20,
                   child: Checkbox(
-                    fillColor: MaterialStateProperty.resolveWith((states) => Colors.grey[300]),
+                    fillColor: MaterialStateProperty.resolveWith((states) => Colors.white),
                     value: element['done'],
                     onChanged: (value){
                       homeCtrl.doneTodo(element['title']);
