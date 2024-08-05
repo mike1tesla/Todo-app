@@ -11,6 +11,8 @@ class HomeController extends GetxController{
   final formKey = GlobalKey<FormState>();
   // quan sát sự thay đổi của trường TextFormField
   final editCtrl = TextEditingController();
+  // quan sát sự thay đổi của tab navigation bar
+  final tabIndex = 0.obs;
   // quan sát sự thay đổi của các Icon
   final chipIndex = 0.obs;
   // quan sát xem có xóa task hay không
@@ -39,6 +41,10 @@ class HomeController extends GetxController{
     // TODO: implement onClose
     editCtrl.dispose();
     super.onClose();
+  }
+
+  void changeTabIndex(int index){
+    tabIndex.value = index;
   }
 
   void changeChipIndex(int value){
@@ -147,4 +153,26 @@ class HomeController extends GetxController{
     doneTodos.refresh();
   }
 
+  int getTotalTask(){
+    var res = 0;
+    for(int i = 0; i < tasks.length; i++){
+      if(tasks[i].todos != null){
+        res += tasks[i].todos!.length;
+      }
+    }
+    return res;
+  }
+  int getTotalDoneTask(){
+    var res = 0;
+    for(int i = 0; i < tasks.length; i++){
+      if(tasks[i].todos != null){
+        for(int j = 0; j < tasks[i].todos!.length; j++){
+          if(tasks[i].todos![j]["done"] == true ){
+            res += 1;
+          }
+        }
+      }
+    }
+    return res;
+  }
 }
